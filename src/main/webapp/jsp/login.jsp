@@ -8,13 +8,13 @@
 <head>
     <title>login</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <script src="../js/jquery-3.4.1.js"></script>
+    <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <style type="text/css">
     body{
         background-color: #eff5cf;
     }
-</style>
+    </style>
 </head>
 <body>
 <div class="container" style="padding-top: 200px;padding-left: 50px">
@@ -29,14 +29,19 @@
             <input class="form-control" type="text" placeholder="Password" name="password">
         </div>
         <div class="form-group">
-            <button class="btn btn-success" type="submit">submit</button>
+            <button class="btn btn-success" type="submit" id="submit">submit</button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="btn btn-primary" type="reset">reset</button>
         </div>
-        <b style="color: red;font-size: 15px;text-align: center">${msg}</b>
     </div>
 </form>
     </div>
+
+</div>
+<div align="center" style="color: red">
+<b>${msg}</b>
+
 </div>
 </body>
+
 </html>

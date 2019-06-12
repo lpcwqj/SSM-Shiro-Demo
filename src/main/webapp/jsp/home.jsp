@@ -11,7 +11,7 @@
 <head>
     <title>home</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <script src="../js/jquery-3.4.1.js"></script>
+    <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <style type="text/css">
         a:link,a:visited{
@@ -45,8 +45,6 @@
 </form>
 </div>
 
-<b style="color: red;font-size: 50px">${msg}</b>
-
 <form id="form1" name="form1" method="post" action="/batchDeletion">
     <table class="table table-hover" border="1px" style="border-color: #e9f5e3;font-size: 14px">
         <thead>
@@ -76,7 +74,7 @@
         </tbody>
     </table>
 
-    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4">BatchDeletion</button>&nbsp;&nbsp;&nbsp;<b style="color: red">${message}</b>
+    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4">BatchDeletion</button>&nbsp;&nbsp;&nbsp;
 
     <table align="center">
         <tr>

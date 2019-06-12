@@ -9,7 +9,7 @@
 <head>
     <title>fuzzy paging</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <script src="../js/jquery-3.4.1.js"></script>
+    <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <style type="text/css">
         a:link,a:visited{
@@ -74,7 +74,7 @@
         </tbody>
     </table>
 
-    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4">BatchDeletion</button>&nbsp;&nbsp;&nbsp;<b style="color: red">${message}</b>
+    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4">BatchDeletion</button>&nbsp;&nbsp;&nbsp;
 
     <table align="center">
         <tr>

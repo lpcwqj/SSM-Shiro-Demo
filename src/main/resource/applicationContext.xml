@@ -45,4 +45,63 @@
     <!-- 开启注解AOP驱动 -->
     <tx:annotation-driven/>
 
+
+    <!-- 1.配置shiro安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="realm" ref="jdbcRealm"/>
+    </bean>
+
+    <!-- 2.配置CacheManager  -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+
+    <!-- 3.配置realm -->
+    <bean id="jdbcRealm" class="realm.shiroRealm"/>
+
+    <!-- 4.配置LifecycleBeanPostProcessor
+         可以自动的调用 配置在spring IOC容器中的shiro bean的生命周期
+         管理shiro中常见的对象
+    -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 5.启用IOC容器中使用shiro的注解，
+        但必须在配置了LifecycleBeanPostProcessor后才能使用
+    -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!-- 6.配置shiroFilter
+        id必须和web.xml中的filter-name一致
+        如果web.xml中设置了初始化参数targetBeanName的value 则对应其value  ->  aaa
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/jsp/login.jsp"/>
+        <!--成功后的跳转页面在控制层已完成-->
+        <!--<property name="successUrl" value="/jsp/home.jsp"/>-->
+        <!--未受认证的跳转的页面-->
+        <!--<property name="unauthorizedUrl" value=""/>-->
+        <!--配置哪些页面需要受保护，以及访问这些页面的权限-->
+        <property name="filterChainDefinitions">
+            <value>
+                <!--
+                    anon 可以被匿名访问
+                    authc 必须认证后(登录)才能访问的页面
+                    logout 登出
+                -->
+                /js/** = anon
+                /css/** = anon
+                /login = anon
+                /logout = logout
+                <!--
+                    /** = authc : 剩余其他路径，必须认证通过才可以访问
+                    /** = user : 剩余其他路径，必须认证通过才可以访问，实现RememberMe的功能，前提是token中设置了该值为true
+                                当再次打开浏览器时不必重新登录，原理：登录成功后浏览器存储一个名为rememberMe的cookie
+                -->
+                /** = user
+            </value>
+        </property>
+    </bean>
 </beans>

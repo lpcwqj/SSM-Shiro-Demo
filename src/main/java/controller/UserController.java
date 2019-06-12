@@ -1,6 +1,12 @@
 package controller;
 
 import beans.User;
+import com.mysql.cj.core.util.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +15,6 @@ import service.UserService;
 import utils.PageUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * @author Lin
@@ -22,37 +27,43 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 用户登录
-     * 验证用户是否存在 不存在直接提示 不判断密码
-     * 验证密码是否正确 不正确进行提示进行重定向
+     * 用户登录 采用shiro
+     * 当某用户登录成功之后，shiro安全框架就会将用户的信息存放在session中，
+     * 你可以通过User user = (User) SecurityUtils.getSubject().getPrincipal();
+     * 这句代码在任何地方任何时候都能获取当前登录成功的用户信息
      */
     @RequestMapping("login")
-    public String checkLogin(@RequestParam(value = "username",required = false) String username,
-                             @RequestParam(value = "password",required = false) String password,
-                             Model model,
-                             HttpServletRequest request)
+    public String checkLogin(@RequestParam(value = "username") String username,
+                             @RequestParam(value = "password") String password,
+                             Model model)
     {
-        if ("".equals(username)){
-            model.addAttribute("msg","User name cannot be empty");
+        String msg = null;
+        if (StringUtils.isNullOrEmpty(username)||StringUtils.isNullOrEmpty(password)){
+            msg = "登录失败,用户名/密码不能为空";
+            model.addAttribute("msg",msg);
             return "login";
         }
-        if("".equals(password)){
-            model.addAttribute("msg","Password cannot be empty");
-            return "login";
+        //获取主体信息，即登录信息
+        Subject currentUser = SecurityUtils.getSubject();
+        //如果当前用户没有登录
+        if (!currentUser.isAuthenticated()){
+            UsernamePasswordToken token = new UsernamePasswordToken(username,password);
+            token.setRememberMe(true);
+            try{
+                //该login方法的底层代码实现了获取一个或多个Realm的方法
+                currentUser.login(token);
+            }
+            catch (UnknownAccountException e){
+                msg = "登录失败,"+e.getMessage();
+                model.addAttribute("msg",msg);
+                return "login";
+            }
+            catch (IncorrectCredentialsException e){
+                msg = "登录失败，密码不正确";
+                model.addAttribute("msg",msg);
+                return "login";
+            }
         }
-        //因为是根据用户名查询的user集合，若集合不存在则说明输入的用户名不存在
-        User user = userService.checkUserByUsername(username);
-        if (user == null){
-            model.addAttribute("msg","User does not exist");
-            return "login";
-        }
-        else if (!user.getPassword().equals(password)&&!"".equals(user.getPassword())){
-            model.addAttribute("msg","Password is wrong");
-            return "login";
-        }
-        //存入session域，用于一次会话
-        request.getSession().setAttribute("username",username);
-        request.getSession().setAttribute("password",password);
         return "redirect:home";
     }
 
@@ -90,7 +101,7 @@ public class UserController {
         //当点击下一页请求时，只传来currentPage值，username的值得从session中获取
 
         //第一次访问fuzzyQuery页面时，即第一页，模糊字段存入session中
-        if (!"".equals(username) && username!=null){
+        if (!StringUtils.isNullOrEmpty(username)){
             request.getSession().setAttribute("username_fuzzy",username);
             PageUtils<User> page = userService.findByPage(currentPage,username);
             model.addAttribute("page1",page);
@@ -152,6 +163,7 @@ public class UserController {
         String username_fuzzy = (String) request.getSession().getAttribute("username_fuzzy");
         if (ids==null){
             model.addAttribute("message","You have not selected in yet");
+            //判断是在主页面还是在模糊查询页面进行的批量删除
             if (username_fuzzy==null||"".equals(username_fuzzy)){
                 return "forward:/home";
             }
@@ -170,15 +182,4 @@ public class UserController {
         userService.add(user);
         return "redirect:/home";
     }
-
-    /**
-     * 退出登录
-     */
-    @RequestMapping("/logout")
-    public String outLogin(HttpSession session)
-    {
-        session.invalidate();
-        return "login";
-    }
-
 }

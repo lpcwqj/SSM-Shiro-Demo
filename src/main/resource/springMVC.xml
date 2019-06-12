@@ -18,14 +18,14 @@
     <mvc:resources mapping="/fonts/**" location="/fonts/"/>
     <mvc:resources mapping="/js/**" location="/js/"/>
     <!--配置拦截器-->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <!-- 拦截所有mvc控制器 -->
-            <mvc:mapping path="/**"/>
-            <!--自定义拦截器类-->
-            <bean class="interceptor.login_Interceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash; 拦截所有mvc控制器 &ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--&lt;!&ndash;自定义拦截器类&ndash;&gt;-->
+            <!--<bean class="interceptor.login_Interceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
 
     <!--视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
