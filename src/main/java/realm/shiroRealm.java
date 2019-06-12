@@ -1,9 +1,10 @@
 package realm;
 
 import beans.User;
-import com.mysql.cj.core.util.StringUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.apache.shiro.util.ByteSource;
 import service.UserService;
 import javax.annotation.Resource;
 
@@ -41,8 +42,9 @@ public class shiroRealm extends AuthenticatingRealm {
 //        封装数据
         Object principal = username;
         Object credential = user.getPassword();
+        ByteSource salt = ByteSource.Util.bytes(username);  //用户名作为盐值
         String realmName = this.getName();
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,credential,realmName);
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,credential,salt,realmName);
 //        返回给调用login(token)方法
         return info;
     }

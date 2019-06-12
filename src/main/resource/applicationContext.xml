@@ -55,8 +55,15 @@
     <!-- 2.配置CacheManager  -->
     <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
 
-    <!-- 3.配置realm -->
-    <bean id="jdbcRealm" class="realm.shiroRealm"/>
+    <!-- 3.配置realm  指定凭证匹配器：把从前台获取的密码进行MD5加密-->
+    <bean id="jdbcRealm" class="realm.shiroRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+                <property name="hashIterations" value="1024"/>
+            </bean>
+        </property>
+    </bean>
 
     <!-- 4.配置LifecycleBeanPostProcessor
          可以自动的调用 配置在spring IOC容器中的shiro bean的生命周期
