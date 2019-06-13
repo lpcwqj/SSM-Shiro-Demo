@@ -30,6 +30,7 @@ public class shiroRealm extends AuthenticatingRealm {
     /**
      * 认证
      */
+    @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException {
 

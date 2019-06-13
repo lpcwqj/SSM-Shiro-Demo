@@ -30,32 +30,31 @@
 </ul>
 
 <div style="padding: 0px 10px 10px 10px;">
-<form id="form0" name="form1" method="post" action="/fuzzyQuery">
-    User name&nbsp;
-    <input type="text" name="username" placeholder="Query by username" style="height: 30px">
+<form id="form0" name="form1" method="post" action="fuzzyQuery">
+    <input type="text" name="username" placeholder="用户名模糊查询" style="height: 30px">
     &nbsp;&nbsp;&nbsp;
-    <button type="submit" value="Query" class="btn btn-default" style="color: #2e6da4">Query</button>
+    <button type="submit" value="Query" class="btn btn-default" style="color: #2e6da4">查询</button>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="btn btn-default" type="button" data-toggle="modal" data-target="#addModal"><a>AddUser</a></button>
+    <button class="btn btn-default" type="button" data-toggle="modal" data-target="#addModal"><a>添加用户</a></button>
     <table align="right">
         <tr>
-            <td><button type="submit" value="logout" class="btn btn-default"><a href="/logout">logout</a></button> </td>
+            <td><button type="submit" value="logout" class="btn btn-default"><a>退出系统</a></button> </td>
         </tr>
     </table>
 </form>
 </div>
 
-<form id="form1" name="form1" method="post" action="/batchDeletion">
+<form id="form1" name="form1" method="post" action="batchDeletion">
     <table class="table table-hover" border="1px" style="border-color: #e9f5e3;font-size: 14px">
         <thead>
         <tr align="center">
-            <td><input type="checkbox" name="ids"></td>
-            <td>userName</td>
-            <td>password</td>
-            <td>email</td>
-            <td>phone</td>
-            <td>roleName</td>
-            <td colspan="2">action</td>
+            <td><input type="checkbox" name="ids"/></td>
+            <td>用户名</td>
+            <td>密码</td>
+            <td>邮箱</td>
+            <td>电话</td>
+            <td>职位</td>
+            <td colspan="2">操作</td>
         </tr>
         </thead>
         <tbody>
@@ -68,28 +67,28 @@
                 <td>${user.phone}</td>
                 <td>${user.rolename}</td>
                 <td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#editModal"
-                            onclick="edit(${user.id})"><a>edit</a></button></td>
-                <td><button type="button" class="btn btn-default" onclick="deleteUser(${user.id})"><a>delete</a></button></td>
+                            onclick="edit(${user.id})"><a>编辑</a></button></td>
+                <td><button type="button" class="btn btn-default" onclick="deleteUser(${user.id})"><a>删除</a></button></td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 
-    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4">BatchDeletion</button>&nbsp;&nbsp;&nbsp;
+    <button type="submit" name="deletes" class="btn btn-default" style="color: #2e6da4" onclick="batchDelete()">批量删除</button>&nbsp;&nbsp;&nbsp;
 
     <table align="center">
         <tr>
         <td>
-            The current page is ${page.currentPage}, with ${page.totalPage} page and ${page.totalRecord} records.
-            Each page shows ${page.pageSize} records
+            当前是第 ${page.currentPage} 页, 共 ${page.totalPage} 页和 ${page.totalRecord} 条记录.
+            每页显示 ${page.pageSize} 条记录.
             <ul class="pager">
                 <c:if test="${page.currentPage != 1}">
-                    <li><a href="/home?currentPage=1">Home</a></li>&nbsp;&nbsp;
-                    <li><a href="/home?currentPage=${page.currentPage-1}">Previous</a></li>&nbsp;&nbsp;
+                    <li><a href="home?currentPage=1">首页</a></li>&nbsp;&nbsp;
+                    <li><a href="home?currentPage=${page.currentPage-1}">上一页</a></li>&nbsp;&nbsp;
                 </c:if>
                 <c:if test="${page.currentPage != page.totalPage}">
-                    <li><a href="/home?currentPage=${page.currentPage+1} ">Next</a></li>&nbsp;&nbsp;
-                    <li><a href="/home?currentPage=${page.totalPage}">End</a></li>
+                    <li><a href="home?currentPage=${page.currentPage+1} ">下一页</a></li>&nbsp;&nbsp;
+                    <li><a href="home?currentPage=${page.totalPage}">尾页</a></li>
                 </c:if>
             </ul>
         </td>
@@ -118,31 +117,31 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="edit_username" class="col-sm-2 control-label">username</label>
+                        <label for="edit_username" class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="edit_username" placeholder="username" name="username">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="edit_password" class="col-sm-2 control-label">password</label>
+                        <label for="edit_password" class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="edit_password" placeholder="password" name="password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="edit_email" class="col-sm-2 control-label">email</label>
+                        <label for="edit_email" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="edit_email" placeholder="email" name="email">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="edit_phone" class="col-sm-2 control-label">phone</label>
+                        <label for="edit_phone" class="col-sm-2 control-label">电话</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="edit_phone" placeholder="phone" name="phone">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="edit_rolename" class="col-sm-2 control-label">rolename</label>
+                        <label for="edit_rolename" class="col-sm-2 control-label">职位</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="edit_rolename" placeholder="rolename" name="rolename">
                         </div>
@@ -176,31 +175,31 @@
             <div class="modal-body">
                 <form class="form-horizontal" id="user_form_add">
                     <div class="form-group">
-                        <label for="add_username" class="col-sm-2 control-label">username</label>
+                        <label for="add_username" class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="add_username" placeholder="username" name="username">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="add_password" class="col-sm-2 control-label">password</label>
+                        <label for="add_password" class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="add_password" placeholder="password" name="password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="add_email" class="col-sm-2 control-label">email</label>
+                        <label for="add_email" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="add_email" placeholder="email" name="email">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="add_phone" class="col-sm-2 control-label">phone</label>
+                        <label for="add_phone" class="col-sm-2 control-label">手机</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="add_phone" placeholder="phone" name="phone">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="add_rolename" class="col-sm-2 control-label">rolename</label>
+                        <label for="add_rolename" class="col-sm-2 control-label">职位</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="add_rolename" placeholder="rolename" name="rolename">
                         </div>
@@ -270,6 +269,12 @@ function addUser() {
                 window.location.reload();
             }
         )
+    }
+}
+function batchDelete() {
+    if (confirm('确定要删除这些用户吗?')) {
+        alert("用户信息删除成功！");
+        window.location.reload();
     }
 }
 </script>

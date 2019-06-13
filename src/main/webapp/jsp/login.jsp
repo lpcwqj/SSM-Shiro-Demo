@@ -19,8 +19,8 @@
 <body>
 <div class="container" style="padding-top: 200px;padding-left: 50px">
     <div class="form-horizontal col-md-offset-3">
-        <h3>Login</h3>
-<form action="/login" method="post">
+        <h3>Welcome to login</h3>
+        <form action="login" method="post">
     <div class="col-md-6">
         <div class="form-group">
             <input class="form-control" type="text" placeholder="Username" name="username">
@@ -39,9 +39,15 @@
 
 </div>
 <div align="center" style="color: red">
-<b>${msg}</b>
+
+<input type="hidden" id="msg" value="${msg}">
 
 </div>
 </body>
-
+<script type="text/javascript">
+    var msg = $("#msg").val();
+    if (msg!=null&&msg!=""){
+        alert(msg);
+    }
+</script>
 </html>

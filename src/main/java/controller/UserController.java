@@ -9,6 +9,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -158,12 +159,10 @@ public class UserController {
      */
     @RequestMapping("batchDeletion")
     public String batchDeletion(@RequestParam(required = false) Integer[] ids,
-                                Model model,
                                 HttpServletRequest request)
     {
         String username_fuzzy = (String) request.getSession().getAttribute("username_fuzzy");
         if (ids==null){
-            model.addAttribute("message","You have not selected in yet");
             //判断是在主页面还是在模糊查询页面进行的批量删除
             if (username_fuzzy==null||"".equals(username_fuzzy)){
                 return "forward:/home";
