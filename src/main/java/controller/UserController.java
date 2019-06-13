@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import service.UserService;
 import utils.PageUtils;
 import javax.annotation.Resource;
@@ -121,35 +122,35 @@ public class UserController {
     }
 
     /**
-     * 跳转到编辑页面 回显数据
+     * ajax传json字符串 回显数据
      */
     @RequestMapping("toEdit")
-    public String selectUserById(@RequestParam(value = "id") Integer id,
-                                 Model model)
+    public @ResponseBody
+    User selectUserById(@RequestParam(value = "id") Integer id)
     {
-        User user = userService.selectUserById(id);
-        model.addAttribute("user",user);
-        return "edit";
+        return userService.selectUserById(id);
     }
 
     /**
      * 修改信息
      */
     @RequestMapping("update")
-    public String update(User user)
+    public @ResponseBody
+    String update(User user)
     {
         userService.update(user);
-        return "redirect:/home";
+        return "OK";
     }
 
     /**
      * 删除
      */
     @RequestMapping("delete")
-    public String delete(@RequestParam(value = "id") Integer id)
+    public @ResponseBody
+    String delete(@RequestParam(value = "id") Integer id)
     {
         userService.delete(id);
-        return "redirect:/home";
+        return "OK";
     }
 
     /**
@@ -177,9 +178,10 @@ public class UserController {
      * 添加用户
      */
     @RequestMapping("add")
-    public String add(User user)
+    public @ResponseBody
+    String add(User user)
     {
         userService.add(user);
-        return "redirect:/home";
+        return "OK";
     }
 }

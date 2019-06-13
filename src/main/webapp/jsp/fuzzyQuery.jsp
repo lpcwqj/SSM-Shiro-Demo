@@ -67,8 +67,9 @@
                 <td>${user.email}</td>
                 <td>${user.phone}</td>
                 <td>${user.rolename}</td>
-                <td><button class="btn btn-default"><a href="/toEdit?id=${user.id}">edit</a></button></td>
-                <td><button class="btn btn-default"><a href="/delete?id=${user.id}">delete</a></button></td>
+                <td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
+                            onclick="edit(${user.id})"><a>edit</a></button></td>
+                <td><button class="btn btn-default" onclick="deleteUser(${user.id})"><a>delete</a></button></td>
             </tr>
         </c:forEach>
         </tbody>
@@ -95,5 +96,109 @@
         </tr>
     </table>
 </form>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>	<!--关闭-->
+                <h4 class="modal-title" id="myModalLabel">
+                    修改用户信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="user_form">
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">id</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="id" name="id" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">username</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" placeholder="username" name="username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">password</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="password" placeholder="password" name="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-2 control-label">email</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="email" placeholder="email" name="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-2 control-label">phone</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="phone" placeholder="phone" name="phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rolename" class="col-sm-2 control-label">rolename</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="rolename" placeholder="rolename" name="rolename">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updateUser()">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+    function edit(id) {
+        $.ajax({
+            type:"post",
+            url:"/toEdit",
+            data:{"id":id},
+            success:function (data) {
+                $("#id").val(data.id);
+                $("#username").val(data.username);
+                $("#password").val(data.password);
+                $("#email").val(data.email);
+                $("#phone").val(data.phone);
+                $("#rolename").val(data.rolename);
+            },
+            error:function () {
+                alert("意外错误！无法修改");
+            }
+        });
+    }
+    function updateUser() {
+        $.post(
+            "/update",
+            $("#user_form").serialize(),
+            function(data){
+                alert("用户信息更新成功！");
+                window.location.reload();
+        });
+    }
+    function deleteUser(id) {
+        if (confirm('确实要删除该用户吗?')) {
+            $.post(
+                "/delete",
+                {"id":id},
+                function(data){
+                    alert("用户信息删除成功！");
+                    window.location.reload();
+                });
+        }
+    }
+</script>
 </body>
 </html>
